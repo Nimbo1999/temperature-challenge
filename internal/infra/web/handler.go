@@ -33,6 +33,9 @@ func handleCep(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error() + "\n"))
 	}
+
+	// @todo Criar o TemperatureService e adicionar o método que extrai a informação
+	// da temperatura.
 }
 
 func (web *WebInfra) ListenAndServe() error {
