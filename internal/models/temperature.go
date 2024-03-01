@@ -1,6 +1,7 @@
 package models
 
 type Temperature struct {
-	Celsius    string `json:"temp_c"`
-	Fahrenheit string `json:"temp_f"`
+	Celsius    float32
+	Fahrenheit float32
+	Kelvin     float32
 }

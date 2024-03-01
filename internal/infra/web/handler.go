@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/nimbo1999/temperature-challenge/internal/infra/web/dto"
 	"github.com/nimbo1999/temperature-challenge/internal/services"
 )
 
@@ -22,20 +23,34 @@ func handleCep(w http.ResponseWriter, r *http.Request) {
 	case services.ErrCepNotValid:
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		w.Write([]byte(err.Error() + "\n"))
+		return
 	case services.ErrCepNotFound:
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error() + "\n"))
+		return
 	case nil:
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(address)
+		break
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error() + "\n"))
+		return
 	}
 
-	// @todo Criar o TemperatureService e adicionar o método que extrai a informação
-	// da temperatura.
+	weatherService := services.WeatherService{}
+	temperature, err := weatherService.GetData(*address)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error() + "\n"))
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(dto.TemperatureResponseDTO{
+		Celsius:    temperature.Celsius,
+		Fahrenheit: temperature.Fahrenheit,
+		Kelvin:     temperature.Kelvin,
+	})
 }
 
 func (web *WebInfra) ListenAndServe() error {
