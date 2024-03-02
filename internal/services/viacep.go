@@ -1,12 +1,10 @@
 package services
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
-	"net/http"
 
-	"github.com/nimbo1999/temperature-challenge/internal/models"
+	"github.com/nimbo1999/temperature-challenge/internal/entity"
+	"github.com/nimbo1999/temperature-challenge/internal/repository"
 )
 
 var (
@@ -14,23 +12,24 @@ var (
 	ErrCepNotFound = errors.New("can not find zipcode")
 )
 
-type ViaCEPService struct {
+type viaCEPService struct {
+	repository repository.CepRepository
 }
 
-func (service *ViaCEPService) GetData(cep string) (*models.Address, error) {
-	address := models.Address{Cep: cep}
+func NewViaCepService(repository repository.CepRepository) *viaCEPService {
+	return &viaCEPService{
+		repository: repository,
+	}
+}
+
+func (service *viaCEPService) GetData(cep string) (*entity.Address, error) {
+	address := entity.Address{Cep: cep}
 	if !address.IsCepValid() {
 		return nil, ErrCepNotValid
 	}
 
-	response, err := http.Get(fmt.Sprintf("https://viacep.com.br/ws/%s/json/", cep))
+	payload, err := service.repository.GetAddressByCep(address.Cep)
 	if err != nil {
-		return nil, err
-	}
-	defer response.Body.Close()
-
-	payload := make(map[string]string)
-	if err = json.NewDecoder(response.Body).Decode(&payload); err != nil {
 		return nil, err
 	}
 

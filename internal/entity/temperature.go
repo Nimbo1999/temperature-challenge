@@ -1,4 +1,4 @@
-package models
+package entity
 
 type Temperature struct {
 	Celsius    float32
