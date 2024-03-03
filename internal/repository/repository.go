@@ -22,7 +22,7 @@ func NewCepRepository() *cepRepository {
 }
 
 func (repo *cepRepository) GetAddressByCep(cep string) (map[string]string, error) {
-	response, err := http.Get(fmt.Sprintf("https://viacep.com.br/ws/%s/json/", cep))
+	response, err := http.Get(fmt.Sprintf("http://viacep.com.br/ws/%s/json/", cep))
 	if err != nil {
 		return nil, err
 	}
