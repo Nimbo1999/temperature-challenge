@@ -9,9 +9,6 @@
 <p align="center">
   <a href="#como-rodar-a-imagem-docker">Como rodar a imagem docker</a> •
   <a href="#consultando-a-api">Consultando a API</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#license">License</a>
 </p>
 
 ## Como rodar a imagem docker
