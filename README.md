@@ -9,11 +9,12 @@
 <p align="center">
   <a href="#como-rodar-a-imagem-docker">Como rodar a imagem docker</a> •
   <a href="#consultando-a-api">Consultando a API</a> •
+  <a href="#rode-os-testes">Rode os testes</a> •
 </p>
 
 ## Como rodar a imagem docker
 
-Para clonar essa applicação você precisará ter instalado o [git](https://git-scm.com) e o [golang](https://go.dev/) em sua maquina. Insira os seguintes commandos em sua CLI para iniciar e rodar a instancia docker:
+Para clonar essa applicação você precisará ter instalado o [git](https://git-scm.com) e o [golang](https://go.dev/) em sua máquina. Insira os seguintes commandos em sua CLI para iniciar e rodar a instancia docker:
 
 ```bash
 # Clone este repositório
@@ -41,3 +42,11 @@ $ curl http://localhost:8080/01001000
 ```
 
 Ou se preferir, caso tenha instalado a extensão [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client), abra a pasta `/api` e fique avontade para alterar o cep e executar a requisição.
+
+## Rode os testes
+
+Foi utilizado a biblioteca `stretchr/testify` para auxiliar com os testes da applicação. Execute o seguinte comando em sua CLI para rodar os testes em sua máquina.
+
+```bash
+$ go test ./...
+```
