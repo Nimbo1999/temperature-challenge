@@ -9,6 +9,7 @@
 <p align="center">
   <a href="#como-rodar-a-imagem-docker">Como rodar a imagem docker</a> •
   <a href="#consultando-a-api">Consultando a API</a> •
+  <a href="#acessar-pelo-cloud-run">Acessar pelo cloud run</a> •
   <a href="#rode-os-testes">Rode os testes</a> •
 </p>
 
@@ -42,6 +43,17 @@ $ curl http://localhost:8080/01001000
 ```
 
 Ou se preferir, caso tenha instalado a extensão [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client), abra a pasta `/api` e fique avontade para alterar o cep e executar a requisição.
+
+## Acessar pelo cloud run
+
+Essa aplicação possui um deploy ativo feito pelo Cloud Run. Interaja com essa aplicação em produção a partir de sua CLI com o seguinte comando:
+
+> **Informação:**
+> Note que o valor `01001000` representa o CEP que deseja consultar a temperatura, podendo ser alterado por um outro valor a qualquer momento.
+
+```bash
+$ curl https://temperature-challenge-u6rku7jkaq-uc.a.run.app/01001000
+```
 
 ## Rode os testes
 
