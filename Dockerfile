@@ -7,4 +7,5 @@ FROM scratch
 WORKDIR /app
 COPY --from=build /app/temperature-app .
 COPY --from=build /app/.env .
+EXPOSE 8080
 ENTRYPOINT [ "./temperature-app" ]
