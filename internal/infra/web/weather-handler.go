@@ -11,13 +11,8 @@ import (
 	"github.com/nimbo1999/temperature-challenge/internal/services"
 )
 
-type WebInfra struct {
-	Port string
-}
-
-func handleCep(w http.ResponseWriter, r *http.Request) {
+func WeatherHandler(w http.ResponseWriter, r *http.Request) {
 	cep := chi.URLParam(r, "cep")
-
 	viacepService := services.NewViaCepService(repository.NewCepRepository())
 	address, err := viacepService.GetData(cep)
 
@@ -55,17 +50,4 @@ func handleCep(w http.ResponseWriter, r *http.Request) {
 		Fahrenheit: temperature.Fahrenheit,
 		Kelvin:     temperature.Kelvin,
 	})
-}
-
-func (web *WebInfra) ListenAndServe() error {
-	r := chi.NewRouter()
-
-	r.Get("/{cep}", handleCep)
-
-	server := http.Server{
-		Addr:    web.Port,
-		Handler: r,
-	}
-
-	return server.ListenAndServe()
 }
