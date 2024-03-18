@@ -1,9 +1,23 @@
 version: '3'
 services:
-  app:
-    build: .
-    container_name: temperature-app
+  weather-app:
+    build:
+      context: .
+      dockerfile: weather-app.Dockerfile
+    container_name: weather-app
     env_file:
       - .env
     ports:
+      - "8081:8080"
+    hostname: weather-app
+  cep-app:
+    depends_on:
+      - weather-app
+    build:
+      context: .
+      dockerfile: cep-app.Dockerfile
+    container_name: cep-app
+    ports:
       - "8080:8080"
+    environment:
+      - WEATHER_API_HOST=weather-app:8080
