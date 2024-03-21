@@ -14,6 +14,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/nimbo1999/temperature-challenge/internal/infra/observability"
 	"github.com/nimbo1999/temperature-challenge/internal/infra/web"
 	"github.com/spf13/viper"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
@@ -41,7 +42,7 @@ func run() error {
 	defer stop()
 
 	// Set up OpenTelemetry
-	otelShutdown, err := setupOTelSDK(ctx, *url)
+	otelShutdown, err := observability.SetupOTelSDK(ctx, *url)
 	if err != nil {
 		return err
 	}

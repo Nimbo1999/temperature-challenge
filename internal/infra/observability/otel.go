@@ -1,4 +1,4 @@
-package main
+package observability
 
 import (
 	"context"
@@ -20,9 +20,12 @@ import (
 	"go.opentelemetry.io/otel/sdk/trace"
 )
 
+var logger = log.New(os.Stderr, "zipkin-logger", log.Ldate|log.Ltime|log.Llongfile)
+var TraceIdHeader = "Trace-Id"
+
 // setupOTelSDK bootstraps the OpenTelemetry pipeline.
 // If it does not return an error, make sure to call shutdown for proper cleanup.
-func setupOTelSDK(ctx context.Context, url string) (shutdown func(context.Context) error, err error) {
+func SetupOTelSDK(ctx context.Context, url string) (shutdown func(context.Context) error, err error) {
 	var shutdownFuncs []func(context.Context) error
 
 	// shutdown calls cleanup functions registered via shutdownFuncs.
@@ -73,8 +76,6 @@ func newPropagator() propagation.TextMapPropagator {
 		propagation.Baggage{},
 	)
 }
-
-var logger = log.New(os.Stderr, "zipkin-logger", log.Ldate|log.Ltime|log.Llongfile)
 
 func newTraceProvider(url string) (*trace.TracerProvider, error) {
 	exporter, err := zipkin.New(
