@@ -45,6 +45,10 @@ http://localhost:8080
 
 Ou se preferir, caso tenha instalado a extensão [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client), abra a pasta `/api` e fique avontade para alterar o cep e executar a requisição.
 
+## Acessando o dashboard do Zipkin
+
+Assim que a primeira requisição for feita, acesse o painel do zipkin para consultar as métricas disponíveis em http://localhost:9411/
+
 ## Acessar pelo cloud run
 
 > **Deprecated** Cloud run foi depreciado e não pode ser mais usado já que não faz mais parte desse desafio.
