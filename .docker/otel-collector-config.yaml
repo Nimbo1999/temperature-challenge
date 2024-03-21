@@ -1,0 +1,31 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+
+exporters:
+  zipkin:
+    endpoint: "${ZIPKIN_HOST}/api/v2/spans"
+
+  otlp:
+    endpoint: otelcol2:4317
+
+  # NOTE: Prior to v0.86.0 use the `logging` instead of `debug`.
+  debug:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, otlp, zipkin]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, otlp]
