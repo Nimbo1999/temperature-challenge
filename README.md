@@ -27,7 +27,10 @@ $ cd temperature-challenge
 # Adicione a sua Weather API Key na variável de ambiente subistituindo a API_KEY pela sua KEY.
 $ echo "$(cat .env.example)API_KEY" > .env
 
-# Inicie o docker container que possui as duas aplicações e o zipkin.
+# Inicie o projeto com o Makefile
+$ make start-build
+
+# Ou inicie o docker container que possui as duas aplicações e o zipkin.
 $ docker compose up -d --build
 # Navegue na pasta /api para executar uma requisição HTTP ou realize um POST para o serviço de cep que ficará disponível na porta :8080 com o cep no payload i.e.: { "cep": "01001-000" }
 ```
