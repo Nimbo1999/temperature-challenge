@@ -7,7 +7,6 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 type WebInfra struct {
@@ -15,17 +14,10 @@ type WebInfra struct {
 	server *http.Server
 }
 
-type handleFuncAdapter func(http.ResponseWriter, *http.Request)
-
-func (h handleFuncAdapter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	h(w, r)
-}
-
 func (web *WebInfra) ListenAndServe(handlerParameter func(w http.ResponseWriter, r *http.Request)) error {
-	handler := web.getHandler(handlerParameter)
 	web.server = &http.Server{
 		Addr:    web.Port,
-		Handler: otelhttp.NewHandler(handler, "/"),
+		Handler: web.getHandler(handlerParameter),
 	}
 	return web.server.ListenAndServe()
 }
@@ -44,8 +36,6 @@ func (web *WebInfra) getHandler(handlerParameter func(w http.ResponseWriter, r *
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Logger)
 	r.Use(middleware.RequestID)
-
-	handler := otelhttp.WithRouteTag("/", handleFuncAdapter(handlerParameter))
-	r.Handle("/{cep}", handler)
+	r.Get("/{cep}", handlerParameter)
 	return r
 }

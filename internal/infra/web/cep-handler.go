@@ -39,7 +39,13 @@ func CepHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(services.ErrCepNotValid.Error() + "\n"))
 		return
 	}
-	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s/%s", viper.GetString("WEATHER_API_HOST"), address.Cep), nil)
+	cep, err := address.FormattCep()
+	if err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Write([]byte(services.ErrCepNotValid.Error() + "\n"))
+		return
+	}
+	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s/%s", viper.GetString("WEATHER_API_HOST"), cep), nil)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -52,8 +58,7 @@ func CepHandler(w http.ResponseWriter, r *http.Request) {
 		request.Header.Add(observability.TraceIdHeader, traceId)
 	}
 
-	client := http.Client{}
-	response, err := client.Do(request)
+	response, err := http.DefaultClient.Do(request)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)

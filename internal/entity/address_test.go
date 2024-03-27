@@ -30,7 +30,7 @@ func Test_IsCepValid(t *testing.T) {
 }
 
 func Test_SetAddressFromMap(t *testing.T) {
-	payload := map[string]string{
+	payload := map[string]any{
 		"cep":         "01001-000",
 		"logradouro":  "Praça da Sé",
 		"complemento": "lado ímpar",

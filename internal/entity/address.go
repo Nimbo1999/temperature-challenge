@@ -33,17 +33,17 @@ func (address Address) IsCepValid() bool {
 	return len(formattedCep) == 8
 }
 
-func (address *Address) SetAddressFromMap(payload map[string]string) error {
-	address.Bairro = payload["bairro"]
-	address.Cep = payload["cep"]
-	address.Complemento = payload["complemento"]
-	address.Ddd = payload["ddd"]
-	address.Gia = payload["gia"]
-	address.Ibge = payload["ibge"]
-	address.Logradouro = payload["logradouro"]
-	address.Localidade = payload["localidade"]
-	address.Siafi = payload["siafi"]
-	address.Uf = payload["uf"]
+func (address *Address) SetAddressFromMap(payload map[string]any) error {
+	address.Bairro = payload["bairro"].(string)
+	address.Cep = payload["cep"].(string)
+	address.Complemento = payload["complemento"].(string)
+	address.Ddd = payload["ddd"].(string)
+	address.Gia = payload["gia"].(string)
+	address.Ibge = payload["ibge"].(string)
+	address.Logradouro = payload["logradouro"].(string)
+	address.Localidade = payload["localidade"].(string)
+	address.Siafi = payload["siafi"].(string)
+	address.Uf = payload["uf"].(string)
 	formattedCep, err := address.FormattCep()
 	if err != nil {
 		return err

@@ -10,8 +10,6 @@ import (
 	"github.com/nimbo1999/temperature-challenge/internal/infra/web/dto"
 	"github.com/nimbo1999/temperature-challenge/internal/repository"
 	"github.com/nimbo1999/temperature-challenge/internal/services"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -29,18 +27,10 @@ func WeatherHandler(w http.ResponseWriter, r *http.Request) {
 		TraceID: traceId,
 	}))
 
-	// Configure span for handler
-	tr := otel.GetTracerProvider().Tracer("weather-handler-component")
-	_, span := tr.Start(ctx, "weather-span")
-	span.SpanContext()
-	defer span.End()
-
 	cep := chi.URLParam(r, "cep")
 
-	span.SetAttributes(attribute.String("CEP", cep))
-
 	viacepService := services.NewViaCepService(repository.NewCepRepository())
-	address, err := viacepService.GetData(cep)
+	address, err := viacepService.GetData(ctx, cep)
 
 	switch err {
 	case services.ErrCepNotValid:
@@ -61,7 +51,7 @@ func WeatherHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	weatherService := services.NewWeatherService(repository.NewWeatherRepository())
-	temperature, err := weatherService.GetData(*address)
+	temperature, err := weatherService.GetData(ctx, *address)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)

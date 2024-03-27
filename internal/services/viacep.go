@@ -1,10 +1,13 @@
 package services
 
 import (
+	"context"
 	"errors"
 
 	"github.com/nimbo1999/temperature-challenge/internal/entity"
 	"github.com/nimbo1999/temperature-challenge/internal/repository"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 var (
@@ -22,7 +25,12 @@ func NewViaCepService(repository repository.CepRepository) *viaCEPService {
 	}
 }
 
-func (service *viaCEPService) GetData(cep string) (*entity.Address, error) {
+func (service *viaCEPService) GetData(ctx context.Context, cep string) (*entity.Address, error) {
+	tr := otel.GetTracerProvider().Tracer("weather-handler-component")
+	_, span := tr.Start(ctx, "get-city-name")
+	defer span.End()
+	span.SetAttributes(attribute.String("CEP", cep))
+
 	address := entity.Address{Cep: cep}
 	if !address.IsCepValid() {
 		return nil, ErrCepNotValid

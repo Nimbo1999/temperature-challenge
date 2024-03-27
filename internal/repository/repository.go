@@ -12,7 +12,7 @@ import (
 )
 
 type CepRepository interface {
-	GetAddressByCep(cep string) (map[string]string, error)
+	GetAddressByCep(cep string) (map[string]any, error)
 }
 
 type cepRepository struct{}
@@ -21,14 +21,14 @@ func NewCepRepository() *cepRepository {
 	return &cepRepository{}
 }
 
-func (repo *cepRepository) GetAddressByCep(cep string) (map[string]string, error) {
+func (repo *cepRepository) GetAddressByCep(cep string) (map[string]any, error) {
 	response, err := http.Get(fmt.Sprintf("http://viacep.com.br/ws/%s/json/", cep))
 	if err != nil {
 		return nil, err
 	}
 	defer response.Body.Close()
 
-	payload := make(map[string]string)
+	payload := make(map[string]any)
 	if err = json.NewDecoder(response.Body).Decode(&payload); err != nil {
 		return nil, err
 	}

@@ -17,7 +17,6 @@ import (
 	"github.com/nimbo1999/temperature-challenge/internal/infra/observability"
 	"github.com/nimbo1999/temperature-challenge/internal/infra/web"
 	"github.com/spf13/viper"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 func init() {
@@ -84,7 +83,6 @@ func newHTTPHandler() http.Handler {
 	router := chi.NewRouter()
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.Logger)
-	handler := otelhttp.WithRouteTag("/", http.HandlerFunc(web.CepHandler))
-	router.Handle("/", handler)
-	return otelhttp.NewHandler(router, "/")
+	router.Post("/", web.CepHandler)
+	return router
 }
